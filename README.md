@@ -7,6 +7,7 @@ Edit MoinMoin with Emacs
  * [request](https://github.com/tkf/emacs-request) (Available from ELPA.)
  * [screen-lines](https://github.com/emacsmirror/screen-lines) (moinmoin-mode requires this. Available from ELPA.)
  * [moinmoin-mode](http://moinmo.in/action/raw/EmacsForMoinMoin/MoinMoinMode?action=raw)
+ * [helm](https://github.com/emacs-helm/helm)
 
 ## Usage
 
