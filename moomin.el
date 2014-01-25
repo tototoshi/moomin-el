@@ -241,7 +241,7 @@
                (delete-trailing-whitespace)))))
 
 (setq helm-c-source-moomin-page
-      '((name . "Page list")
+      '((name . "MoinMoin wiki page list")
         (init . (lambda ()
                   (with-current-buffer (helm-candidate-buffer 'global)
                     (moomin-get-page-list))))
