@@ -198,9 +198,9 @@
               :type "POST"
               :data (moomin-http-url-encode-alist
                      `((action . "edit")
-                       ("rev" . ,rev)
+                       (rev . ,rev)
                        (ticket . ,ticket)
-                       ("button_save" . "Save+Changes")
+                       (button_save . "Save+Changes")
                        (editor . "text")
                        (savetext . ,text)
                        (comment . "")
