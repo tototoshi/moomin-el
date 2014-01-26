@@ -143,6 +143,10 @@
     (moinmoin-mode)
     (moomin-make-local-variables page rev ticket)))
 
+(defun moomin-wiki-url (page)
+  (concat moomin-wiki-url-base "/"
+          (moomin-http-url-encode "Arch Linux" 'utf-8)))
+
 (defun moomin-login ()
   (request
    moomin-wiki-url-base
@@ -159,7 +163,7 @@
 (defun moomin-get-current-revision (page)
   (let ((rev nil))
     (request
-     (concat moomin-wiki-url-base "/" page)
+     (moomin-wiki-url page)
      :type "GET"
      :params '((action . "edit")
                (editor . "text"))
@@ -177,7 +181,7 @@
 (defun moomin-get-page (page)
   (moomin-login)
   (request
-   (concat moomin-wiki-url-base "/" page)
+   (moomin-wiki-url page)
    :type "GET"
    :params '((action . "edit")
              (editor . "text"))
@@ -190,30 +194,29 @@
 
 (defun moomin-save-page (page text rev ticket)
   (moomin-login)
-  (let ((url (concat moomin-wiki-url-base "/" page)))
-    (cond ((not (string= moomin-current-buffer-rev (moomin-get-current-revision page)))
-           (message "Oops! Failed to save changes. Someone has already editted this page"))
-          (t (request
-              url
-              :type "POST"
-              :data (moomin-http-url-encode-alist
-                     `((action . "edit")
-                       (rev . ,rev)
-                       (ticket . ,ticket)
-                       (button_save . "Save+Changes")
-                       (editor . "text")
-                       (savetext . ,text)
-                       (comment . "")
-                       (category . "")))
-              :headers (moomin-request-headers)
-              :parser 'buffer-string
-              :sync t
-              :success (function*
-                        (lambda (&key data &allow-other-keys)
-                          (let ((p (point)))
-                            (moomin-get-page page)
-                            (goto-char p))
-                          (message "Save changes."))))))))
+  (cond ((not (string= moomin-current-buffer-rev (moomin-get-current-revision page)))
+         (message "Oops! Failed to save changes. Someone has already editted this page"))
+        (t (request
+            (moomin-wiki-url page)
+            :type "POST"
+            :data (moomin-http-url-encode-alist
+                   `((action . "edit")
+                     (rev . ,rev)
+                     (ticket . ,ticket)
+                     (button_save . "Save+Changes")
+                     (editor . "text")
+                     (savetext . ,text)
+                     (comment . "")
+                     (category . "")))
+            :headers (moomin-request-headers)
+            :parser 'buffer-string
+            :sync t
+            :success (function*
+                      (lambda (&key data &allow-other-keys)
+                        (let ((p (point)))
+                          (moomin-get-page page)
+                          (goto-char p))
+                        (message "Save changes.")))))))
 
 (defun moomin-save-current-buffer ()
   (interactive)
@@ -259,3 +262,5 @@
   (helm '(helm-c-source-moomin-page)))
 
 (provide 'moomin)
+
+;;; moomin.el ends here
