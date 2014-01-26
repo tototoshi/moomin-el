@@ -111,7 +111,6 @@
   (moomin-html-unescape))
 
 (defun moomin-extract-ticket ()
-  (interactive)
   (save-excursion
     (let ((start (progn (goto-char (point-min))
                       (re-search-forward "name=\"ticket\"")
@@ -123,7 +122,6 @@
       (buffer-substring-no-properties start end))))
 
 (defun moomin-extract-rev-token ()
-  (interactive)
   (save-excursion
     (let ((start (progn (goto-char (point-min))
                       (re-search-forward "name=\"rev\"")
