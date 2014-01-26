@@ -224,6 +224,10 @@
    moomin-current-buffer-rev
    moomin-current-buffer-ticket-token))
 
+(defun moomin-browse-current-page ()
+  (interactive)
+  (moomin-browse-url moomin-current-buffer-page-name))
+
 (defun moomin-browse-url (page)
   (browse-url (concat moomin-wiki-url-base "/" page)))
 
