@@ -143,7 +143,7 @@
 
 (defun moomin-wiki-url (page)
   (concat moomin-wiki-url-base "/"
-          (moomin-http-url-encode "Arch Linux" 'utf-8)))
+          (moomin-http-url-encode page 'utf-8)))
 
 (defun moomin-login ()
   (request
