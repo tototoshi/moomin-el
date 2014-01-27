@@ -139,8 +139,8 @@
         (rev (moomin-extract-rev-token)))
     (moomin-extract-textarea)
     (moinmoin-mode)
+    (transient-mark-mode 1)
     (moomin-make-local-variables page rev ticket)))
-
 
 (defun moomin-wiki-url (page)
   (concat moomin-wiki-url-base "/"
