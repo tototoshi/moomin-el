@@ -141,9 +141,13 @@
     (moinmoin-mode)
     (moomin-make-local-variables page rev ticket)))
 
+
 (defun moomin-wiki-url (page)
   (concat moomin-wiki-url-base "/"
-          (moomin-http-url-encode page 'utf-8)))
+          (reduce '(lambda (x y) (concat x "/" y))
+                  (mapcar
+                   '(lambda (path) (moomin-http-url-encode path 'utf-8))
+                   (split-string page "/")))))
 
 (defun moomin-login ()
   (request
