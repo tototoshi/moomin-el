@@ -139,7 +139,6 @@
         (rev (moomin-extract-rev-token)))
     (moomin-extract-textarea)
     (moinmoin-mode)
-    (transient-mark-mode 1)
     (moomin-make-local-variables page rev ticket)))
 
 (defun moomin-wiki-url (page)
@@ -266,6 +265,11 @@
 (defun helm-moomin ()
   (interactive)
   (helm '(helm-c-source-moomin-page)))
+
+(add-hook 'moinmoin-mode
+          (lambda ()
+            (transient-mark-mode 1)
+            (deactivate-mark t)))
 
 (provide 'moomin)
 
