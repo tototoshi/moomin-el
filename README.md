@@ -2,12 +2,42 @@
 
 Edit MoinMoin with Emacs
 
-## Dependency
+## Install
 
- * [request](https://github.com/tkf/emacs-request) (Available from ELPA.)
- * [screen-lines](https://github.com/emacsmirror/screen-lines) (moinmoin-mode requires this. Available from ELPA.)
- * [moinmoin-mode](http://moinmo.in/action/raw/EmacsForMoinMoin/MoinMoinMode?action=raw)
- * [helm](https://github.com/emacs-helm/helm) (Available from ELPA.)
+Evaluate this script.
+
+```lisp
+(defun my-install-dependencies-from-elpa ()
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (package-initialize)
+  (unless (package-installed-p 'request)
+    (package-refresh-contents) (package-install 'request)))
+
+(defun my-install-dependencies-with-el-get ()
+  (unless (require 'el-get nil t)
+    (with-current-buffer
+        (url-retrieve-synchronously "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (require 'el-get)
+  (let ((el-get-sources
+         '((:name screen-lines :type github :pkgname "emacsmirror/screen-lines")
+           (:name moinmoin-mode :type github :pkgname "tototoshi/moinmoin-mode")
+           (:name moomin :type github :pkgname "tototoshi/moomin-el"))))
+    (dolist (p el-get-sources)
+      (let ((package-name (plist-get p :name)))
+        (unless (el-get-package-installed-p package-name)
+          (el-get-reinstall package-name))))))
+
+(defun my-install-dependencies ()
+  (interactive)
+  (my-install-dependencies-from-elpa)
+  (my-install-dependencies-with-el-get))
+
+(my-install-dependencies)
+```
+
 
 ## Usage
 
