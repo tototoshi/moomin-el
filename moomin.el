@@ -52,6 +52,9 @@
 (defvar moomin-user nil)
 (defvar moomin-password nil)
 
+(defvar moomin-history-file "~/.emacs.d/.moomin_history")
+(setq moomin-history-limit 10)
+
 ;; This function is picked up from http-get.el
 ;;
 ;; URL encoding for parameters
@@ -178,6 +181,26 @@
                      (insert data)
                      (setq rev (moomin-extract-rev-token)))))))
     rev))
+(search-forward "moomin" (point-max))
+
+(defun moomin-add-history (page)
+  (with-temp-buffer
+    (progn
+      (unless (file-exists-p moomin-history-file)
+        (write-region "" "" moomin-history-file))
+      (insert-file-contents-literally moomin-history-file)
+      (goto-char (point-min))
+      (when (re-search-forward (concat "^" (regexp-quote page) "$") (point-max) 'noerror)
+        (move-beginning-of-line 1)
+        (kill-line 1)
+        (setq kill-ring (cdr kill-ring)))
+      (goto-char (point-min))
+      (insert page)
+      (insert "\n")
+      (goto-char (point-min))
+      (forward-line moomin-history-limit)
+      (delete-region (point) (point-max))
+      (write-file moomin-history-file))))
 
 (defun moomin-get-page (page)
   (moomin-login)
@@ -191,6 +214,7 @@
    :sync t
    :success (function*
              (lambda (&key data &allow-other-keys)
+               (moomin-add-history page)
                (moomin-flash-buffer-with-response-data page data)))))
 
 (defun moomin-save-page (page text rev ticket)
@@ -249,10 +273,21 @@
                (delete-trailing-whitespace)))))
 
 (setq helm-c-source-moomin-page
-      '((name . "MoinMoin wiki page list")
+      '((name . "MoinMoin Wiki Page List")
         (init . (lambda ()
-                  (with-current-buffer (helm-candidate-buffer 'global)
+                  (with-current-buffer (helm-candidate-buffer "MoinMoin Wiki Pages")
                     (moomin-get-page-list))))
+        (candidates-in-buffer)
+        (action
+         . (("Edit with emacs" . moomin-get-page)
+            ("View" . moomin-browse-url)))))
+
+(setq helm-c-source-moomin-history
+      '((name . "MoinMoin Wiki Page History")
+        (init . (lambda ()
+                  (with-current-buffer (helm-candidate-buffer "MoinMoin Wiki History")
+                    (when (file-exists-p moomin-history-file)
+                      (insert-file-contents-literally moomin-history-file)))))
         (candidates-in-buffer)
         (action
          . (("Edit with emacs" . moomin-get-page)
@@ -264,7 +299,7 @@
 
 (defun helm-moomin ()
   (interactive)
-  (helm '(helm-c-source-moomin-page)))
+  (helm '(helm-c-source-moomin-history helm-c-source-moomin-page)))
 
 (add-hook 'moinmoin-mode
           (lambda ()
