@@ -199,7 +199,7 @@
     (progn
       (unless (file-exists-p moomin-history-file)
         (write-region "" "" moomin-history-file))
-      (insert-file-contents-literally moomin-history-file)
+      (insert-file-contents moomin-history-file)
       (goto-char (point-min))
       (when (re-search-forward (concat "^" (regexp-quote page) "$") (point-max) 'noerror)
         (move-beginning-of-line 1)
@@ -298,7 +298,7 @@
         (init . (lambda ()
                   (with-current-buffer (helm-candidate-buffer "MoinMoin Wiki History")
                     (when (file-exists-p moomin-history-file)
-                      (insert-file-contents-literally moomin-history-file)))))
+                      (insert-file-contents moomin-history-file)))))
         (candidates-in-buffer)
         (action
          . (("Edit with emacs" . moomin-get-page)
