@@ -41,10 +41,10 @@
 ;;; Code:
 ;;;
 
-(require 'screen-lines) ;; moinmoin-mode requires this. available from elpa.
+(require 'screen-lines)
 (require 'moinmoin-mode)
-(require 'request) ;; available from elpa
-(require 'helm)    ;; available from elpa
+(require 'request)
+(require 'helm)
 
 (defvar moomin-basic-auth-user nil)
 (defvar moomin-basic-auth-password nil)
