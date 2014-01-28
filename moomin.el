@@ -271,6 +271,10 @@
 (defun moomin-browse-url (page)
   (browse-url (concat moomin-wiki-url-base "/" page)))
 
+(defun moomin-reload-current-page ()
+  (interactive)
+  (moomin-get-page moomin-current-buffer-page-name))
+
 (defun moomin-get-page-list ()
   (moomin-login)
   (request
