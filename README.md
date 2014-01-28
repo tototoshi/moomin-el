@@ -7,7 +7,7 @@ Edit MoinMoin with Emacs
 Evaluate this script.
 
 ```lisp
-(defun my-install-dependencies-from-elpa ()
+(defun moomin-install-dependencies-from-elpa ()
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize)
@@ -16,7 +16,7 @@ Evaluate this script.
   (unless (package-installed-p 'request)
     (package-refresh-contents) (package-install 'request)))
 
-(defun my-install-dependencies-with-el-get ()
+(defun moomin-install-dependencies-with-el-get ()
   (unless (require 'el-get nil t)
     (with-current-buffer
         (url-retrieve-synchronously "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
@@ -32,12 +32,11 @@ Evaluate this script.
         (unless (el-get-package-installed-p package-name)
           (el-get-install package-name))))))
 
-(defun my-install-dependencies ()
-  (interactive)
+(defun moomin-install-dependencies ()
   (my-install-dependencies-from-elpa)
   (my-install-dependencies-with-el-get))
 
-(my-install-dependencies)
+(moomin-install-dependencies)
 ```
 
 
