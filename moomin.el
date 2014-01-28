@@ -83,6 +83,12 @@
           concat "="
           concat (moomin-http-url-encode v 'utf-8)))
 
+(defun moomin-join-string (lst separator)
+  (loop for sep = "" then separator
+        for elm in lst
+        concat sep
+        concat elm))
+
 (defun moomin-basic-auth-header ()
   (concat "Basic" " "
           (base64-encode-string
@@ -153,10 +159,9 @@
 
 (defun moomin-wiki-url (page)
   (concat moomin-wiki-url-base "/"
-          (reduce '(lambda (x y) (concat x "/" y))
-                  (mapcar
-                   '(lambda (path) (moomin-http-url-encode path 'utf-8))
-                   (split-string page "/")))))
+          (moomin-join-string
+           (mapcar (lambda (path) (moomin-http-url-encode path 'utf-8)) (split-string page "/"))
+           "/")))
 
 (defun moomin-login ()
   (request
