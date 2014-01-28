@@ -99,7 +99,8 @@
                                ("&amp;" . "&"))))
     (dolist (pair mapping-table-assoc)
       (goto-char (point-min))
-      (replace-string (car pair) (cdr pair))))
+      (while (search-forward (car pair) nil t)
+        (replace-match (cdr pair)))))
   (goto-char (point-min)))
 
 (defun moomin-extract-textarea ()
