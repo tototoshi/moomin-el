@@ -57,6 +57,8 @@ Evaluate this script.
 ;; Assign keybind to 'helm-moomin and 'moomin-save-current-buffer as you like
 (global-set-key (kbd "C-x w") 'helm-moomin)
 (add-hook 'moinmoin-mode-hook
-  (lambda ()
-    (define-key moinmoin-mode-map (kbd "C-c C-c") 'moomin-save-current-buffer)))
+          (lambda ()
+            (define-key moinmoin-mode-map (kbd "C-c C-c") 'moomin-save-current-buffer)
+            (define-key moinmoin-mode-map (kbd "C-c C-o") 'moomin-browse-current-page)
+            (define-key moinmoin-mode-map (kbd "C-c C-r") 'moomin-reload-current-page)))
 ```
