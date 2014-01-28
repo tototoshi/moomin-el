@@ -226,7 +226,9 @@
    :success (function*
              (lambda (&key data &allow-other-keys)
                (moomin-add-history page)
-               (moomin-flash-buffer-with-response-data page data)))))
+               (moomin-flash-buffer-with-response-data page data)
+               (transient-mark-mode 1)
+               (deactivate-mark t)))))
 
 (defun moomin-save-page (page text rev ticket)
   (moomin-login)
