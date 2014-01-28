@@ -53,7 +53,13 @@
 (defvar moomin-password nil)
 
 (defvar moomin-history-file "~/.emacs.d/.moomin_history")
-(setq moomin-history-limit 10)
+(defvar moomin-history-limit 10)
+
+(defvar moomin-current-buffer-rev nil)
+(defvar moomin-current-buffer-page-name nil)
+(defvar moomin-current-buffer-ticket-token nil)
+(defvar helm-c-source-moomin-page nil)
+(defvar helm-c-source-moomin-history nil)
 
 ;; This function is picked up from http-get.el
 ;;
