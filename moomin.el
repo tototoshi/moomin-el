@@ -163,6 +163,10 @@
            (mapcar (lambda (path) (moomin-http-url-encode path 'utf-8)) (split-string page "/"))
            "/")))
 
+(defun moomin-moinmoin-mode-hook-function ()
+  (transient-mark-mode 1)
+  (deactivate-mark t))
+
 (defun moomin-login ()
   (request
    moomin-wiki-url-base
@@ -227,8 +231,7 @@
              (lambda (&key data &allow-other-keys)
                (moomin-add-history page)
                (moomin-flash-buffer-with-response-data page data)
-               (transient-mark-mode 1)
-               (deactivate-mark t)))))
+               (moomin-moinmoin-mode-hook-function)))))
 
 (defun moomin-save-page (page text rev ticket)
   (moomin-login)
@@ -318,10 +321,7 @@
   (interactive)
   (helm '(helm-c-source-moomin-history helm-c-source-moomin-page)))
 
-(add-hook 'moinmoin-mode
-          (lambda ()
-            (transient-mark-mode 1)
-            (deactivate-mark t)))
+(add-hook 'moinmoin-mode 'moomin-moinmoin-mode-hook-function)
 
 (provide 'moomin)
 
