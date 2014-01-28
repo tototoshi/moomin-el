@@ -181,7 +181,6 @@
                      (insert data)
                      (setq rev (moomin-extract-rev-token)))))))
     rev))
-(search-forward "moomin" (point-max))
 
 (defun moomin-add-history (page)
   (with-temp-buffer
