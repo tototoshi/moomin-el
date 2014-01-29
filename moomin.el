@@ -198,6 +198,19 @@
                      (setq rev (moomin-extract-rev-token)))))))
     rev))
 
+(defun moomin-search-line (line)
+  (re-search-forward (concat "^" (regexp-quote line) "$") (point-max) 'noerror))
+
+(defun moomin-delete-line ()
+  (move-beginning-of-line 1)
+  (kill-line 1)
+  (setq kill-ring (cdr kill-ring)))
+
+(defun moomin-limit-line (limit)
+  (goto-char (point-min))
+  (forward-line moomin-history-limit)
+  (delete-region (point) (point-max)))
+
 (defun moomin-add-history (page)
   (with-temp-buffer
     (progn
@@ -205,16 +218,12 @@
         (write-region "" "" moomin-history-file))
       (insert-file-contents moomin-history-file)
       (goto-char (point-min))
-      (when (re-search-forward (concat "^" (regexp-quote page) "$") (point-max) 'noerror)
-        (move-beginning-of-line 1)
-        (kill-line 1)
-        (setq kill-ring (cdr kill-ring)))
+      (when (moomin-search-line page)
+        (moomin-delete-line))
       (goto-char (point-min))
       (insert page)
       (insert "\n")
-      (goto-char (point-min))
-      (forward-line moomin-history-limit)
-      (delete-region (point) (point-max))
+      (moomin-limit-line moomin-history-limit)
       (write-file moomin-history-file))))
 
 (defun moomin-delete-from-history (page)
@@ -223,10 +232,10 @@
       (when (file-exists-p moomin-history-file)
         (insert-file-contents moomin-history-file)
         (goto-char (point-min))
-        (when (re-search-forward (concat "^" (regexp-quote page) "$") (point-max) 'noerror)
-          (move-beginning-of-line 1)
-          (kill-line 1)
-          (setq kill-ring (cdr kill-ring)))))))
+        (when (moomin-search-line page)
+          (moomin-delete-line)
+          (write-file moomin-history-file)
+          (message (format "Removed '%s' from history." page)))))))
 
 (defun moomin-get-page (page)
   (moomin-login)
@@ -311,7 +320,7 @@
         (candidates-in-buffer)
         (action
          . (("Edit with emacs" . moomin-get-page)
-            ("View" . moomin-browse-url)))))
+            ("Open in browser" . moomin-browse-url)))))
 
 (setq helm-c-source-moomin-history
       '((name . "MoinMoin Wiki Page History")
@@ -322,7 +331,7 @@
         (candidates-in-buffer)
         (action
          . (("Edit with emacs" . moomin-get-page)
-            ("View" . moomin-browse-url)))))
+            ("Open in browser" . moomin-browse-url)
             ("Delete from history" . moomin-delete-from-history)))))
 
 (defun moomin-create-new-page (page)
