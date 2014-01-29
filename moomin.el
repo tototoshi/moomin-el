@@ -77,11 +77,11 @@
 
 (defun moomin-http-url-encode-alist (alist)
   (loop for sep = "" then "&"
-          for (k . v) in alist
-          concat sep
-          concat (moomin-http-url-encode (format "%s" k) 'utf-8)
-          concat "="
-          concat (moomin-http-url-encode v 'utf-8)))
+        for (k . v) in alist
+        concat sep
+        concat (moomin-http-url-encode (format "%s" k) 'utf-8)
+        concat "="
+        concat (moomin-http-url-encode v 'utf-8)))
 
 (defun moomin-join-string (lst separator)
   (loop for sep = "" then separator
@@ -129,23 +129,23 @@
 (defun moomin-extract-ticket ()
   (save-excursion
     (let ((start (progn (goto-char (point-min))
-                      (re-search-forward "name=\"ticket\"")
-                      (re-search-forward "value=\"")
-                      (point)))
-        (end (progn
-               (re-search-forward "\"")
-               (- (point) 1))))
+                        (re-search-forward "name=\"ticket\"")
+                        (re-search-forward "value=\"")
+                        (point)))
+          (end (progn
+                 (re-search-forward "\"")
+                 (- (point) 1))))
       (buffer-substring-no-properties start end))))
 
 (defun moomin-extract-rev-token ()
   (save-excursion
     (let ((start (progn (goto-char (point-min))
-                      (re-search-forward "name=\"rev\"")
-                      (re-search-forward "value=\"")
-                      (point)))
-        (end (progn
-               (re-search-forward "\"")
-               (- (point) 1))))
+                        (re-search-forward "name=\"rev\"")
+                        (re-search-forward "value=\"")
+                        (point)))
+          (end (progn
+                 (re-search-forward "\"")
+                 (- (point) 1))))
       (buffer-substring-no-properties start end))))
 
 (defun moomin-flash-buffer-with-response-data (page data)
