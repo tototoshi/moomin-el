@@ -217,6 +217,17 @@
       (delete-region (point) (point-max))
       (write-file moomin-history-file))))
 
+(defun moomin-delete-from-history (page)
+  (with-temp-buffer
+    (progn
+      (when (file-exists-p moomin-history-file)
+        (insert-file-contents moomin-history-file)
+        (goto-char (point-min))
+        (when (re-search-forward (concat "^" (regexp-quote page) "$") (point-max) 'noerror)
+          (move-beginning-of-line 1)
+          (kill-line 1)
+          (setq kill-ring (cdr kill-ring)))))))
+
 (defun moomin-get-page (page)
   (moomin-login)
   (request
@@ -312,6 +323,7 @@
         (action
          . (("Edit with emacs" . moomin-get-page)
             ("View" . moomin-browse-url)))))
+            ("Delete from history" . moomin-delete-from-history)))))
 
 (defun moomin-create-new-page (page)
   (interactive "sNewPage: ")
