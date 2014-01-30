@@ -292,6 +292,7 @@
   (moomin-browse-url moomin-current-buffer-page-name))
 
 (defun moomin-browse-url (page)
+  (moomin-add-history page)
   (browse-url (concat moomin-wiki-url-base "/" page)))
 
 (defun moomin-reload-current-page ()
