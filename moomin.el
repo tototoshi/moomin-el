@@ -58,8 +58,6 @@
 (defvar moomin-current-buffer-rev nil)
 (defvar moomin-current-buffer-page-name nil)
 (defvar moomin-current-buffer-ticket-token nil)
-(defvar helm-c-source-moomin-page nil)
-(defvar helm-c-source-moomin-history nil)
 
 ;; This function is picked up from http-get.el
 ;;
@@ -313,7 +311,7 @@
                (goto-char (point-min))
                (delete-trailing-whitespace)))))
 
-(setq helm-c-source-moomin-page
+(defvar helm-source-moomin-page
       '((name . "MoinMoin Wiki Page List")
         (init . (lambda ()
                   (with-current-buffer (helm-candidate-buffer "MoinMoin Wiki Pages")
@@ -323,7 +321,7 @@
          . (("Edit with emacs" . moomin-get-page)
             ("Open in browser" . moomin-browse-url)))))
 
-(setq helm-c-source-moomin-history
+(defvar helm-source-moomin-history
       '((name . "MoinMoin Wiki Page History")
         (init . (lambda ()
                   (with-current-buffer (helm-candidate-buffer "MoinMoin Wiki History")
@@ -335,13 +333,18 @@
             ("Open in browser" . moomin-browse-url)
             ("Delete from history" . moomin-delete-from-history)))))
 
+(defvar helm-source-moomin-not-found
+  `((name . "Create New Wiki Page")
+    (dummy)
+    (action . (("Edit with emacs" . moomin-get-page)))))
+
 (defun moomin-create-new-page (page)
   (interactive "sNewPage: ")
   (moomin-get-page page))
 
 (defun helm-moomin ()
   (interactive)
-  (helm '(helm-c-source-moomin-history helm-c-source-moomin-page)))
+  (helm '(helm-source-moomin-history helm-source-moomin-page helm-source-moomin-not-found)))
 
 (add-hook 'moinmoin-mode 'moomin-moinmoin-mode-hook-function)
 
